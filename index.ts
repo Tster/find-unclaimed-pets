@@ -1,3 +1,7 @@
+import { ethers } from "ethers"
+
+const provider = new ethers.providers.InfuraProvider()
+
 const contractAddress = "0x86C10D10ECa1Fca9DAF87a279ABCcabe0063F247"
 
 const contractABI = [
@@ -12,6 +16,9 @@ async function isPetMinted(petId: number) {
         await petsContract.ownerOf(petId)
     } catch {
         console.log("Pet not minted: " + petId)
+
+        //Call OpenSea API to check if corresponding cat is listed
+        //If listed, console.log price and tokenId
     }
 
 }
