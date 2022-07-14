@@ -13,16 +13,17 @@ const petsContract = new ethers.Contract(contractAddress,contractABI,provider)
 async function isPetMinted(petId: number) {
     
     //Crude V1 logic for checking if a pet has been minted
-    //Try to get the pet's owner; if an error is thrown assume the pet has not been minted and return the pet ID
+    //Try to get the pet's owner; if an error is thrown because the token does not exist return the pet ID
     //For an upcoming version, add logic to qualify the error and prevent false positives due to "real" errors e.g. rate-limiting
-    
+        
     try {
         await petsContract.ownerOf(petId)
-    } catch {
-        console.log("Pet not minted: " + petId)
-
-        //Call OpenSea API to check if corresponding cat is listed
-        //If listed, console.log price and tokenId
+    } catch (error: unknown) {
+        if (error instanceof Error && error.message.includes("ERC721: owner query for nonexistent token")) {
+            console.log(petId)
+        } else {
+            console.log(error)
+        }
     }
 
 }
